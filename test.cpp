@@ -15,8 +15,13 @@ int main() {
     using namespace std;
     auto res = shared_resource<int>(0);
     thread threads[10];
-    for (auto & t : threads) {
-        t = thread(inc, 10, std::ref(res));
+    {
+        auto two = shared_resource<double>(3.14);
+        auto [a, b] = grant_accesses(res, two);
+        cout << *a << '\n' << *b << '\n';
+        for (auto & t : threads) {
+            t = thread(inc, 10, std::ref(res));
+        }
     }
 
     for (auto & t: threads) {
